@@ -61,6 +61,8 @@ entity audio_meters is
            in_red    : in std_logic_vector(7 downto 0);
            in_green  : in std_logic_vector(7 downto 0);
            in_blue   : in std_logic_vector(7 downto 0);
+           is_interlaced   : in std_logic;
+           is_second_field : in std_logic;
             
            -----------------------------------
            -- VGA data to be converted to HDMI

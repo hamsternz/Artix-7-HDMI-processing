@@ -95,6 +95,8 @@ entity hdmi_io is
         in_red    : out std_logic_vector(7 downto 0);
         in_green  : out std_logic_vector(7 downto 0);
         in_blue   : out std_logic_vector(7 downto 0);
+        is_interlaced   : out std_logic;
+        is_second_field : out std_logic;
         
         -----------------------------------
         -- VGA data to be converted to HDMI
@@ -160,7 +162,7 @@ architecture Behavioral of hdmi_io is
         adp_subpacket3_bits : out std_logic_vector(1 downto 0)
     );
     end component;
-
+    
     -----------------------------------------------------
     -- This is a half-baked solution to extracting data
     -- from ADP packets - just pipe the data thorugh and 
@@ -192,6 +194,8 @@ architecture Behavioral of hdmi_io is
     signal adp_subpacket1_bits : std_logic_vector(1 downto 0);
     signal adp_subpacket2_bits : std_logic_vector(1 downto 0);
     signal adp_subpacket3_bits : std_logic_vector(1 downto 0);
+    signal is_interlaced_i     : std_logic;
+    signal is_second_field_i   : std_logic;
 
     component extract_audio_samples is
     Port ( clk                 : in STD_LOGIC;
@@ -218,6 +222,14 @@ architecture Behavioral of hdmi_io is
     signal raw_ch2   : std_logic_vector(7 downto 0);  -- B or Cb
     signal raw_ch1   : std_logic_vector(7 downto 0);  -- G or Y
     signal raw_ch0   : std_logic_vector(7 downto 0);   -- R or Cr
+
+    component detect_interlace is
+        Port ( clk : in STD_LOGIC;
+               hsync           : in  std_logic;
+               vsync           : in  std_logic;
+               is_interlaced   : out std_logic;
+               is_second_field : out std_logic);
+    end component;
 
     component expand_422_to_444 is
     Port ( clk : in STD_LOGIC;
@@ -324,16 +336,17 @@ begin
     hdmi_rx_txen <= '1';
     hdmi_rx_cec  <= 'Z';
 
-    debug(7)          <= input_is_YCbCr;
-    debug(6)          <= input_is_422;
-    debug(5)          <= input_is_sRGB;        
-    debug(4 downto 3) <= (others => '0');
+    debug(7)          <= raw_hsync;
+    debug(6)          <= raw_vsync;
+    debug(5)          <= is_second_field_i;  
+    debug(4)          <= is_interlaced_i;      
+    debug(3 downto 0) <= (others => '0');
 
 i_edid_rom: edid_rom  port map (
              clk      => clk100,
              sclk_raw => hdmi_rx_scl,
              sdat_raw => hdmi_rx_sda,
-             edid_debug => debug(2 downto 0));
+             edid_debug => open);
 
     ---------------------
     -- Input buffers
@@ -410,6 +423,15 @@ i_expand_422_to_444: expand_422_to_444 Port map (
         out_V     => fourfourfour_V,
         out_W     => fourfourfour_W
     );
+
+    is_interlaced   <= is_interlaced_i;
+    is_second_field <= is_second_field_i; 
+i_detect_interlace: detect_interlace Port map ( 
+    clk             => pixel_clk_i,
+    hsync           => raw_hsync,
+    vsync           => raw_vsync,
+    is_interlaced   => is_interlaced_i,
+    is_second_field => is_second_field_i);
 
 i_conversion_to_RGB: conversion_to_RGB 
     port map (

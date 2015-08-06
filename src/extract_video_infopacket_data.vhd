@@ -84,7 +84,7 @@ process(clk)
                 -- Move the incoming bits into a shift register
                 -----------------------------------------------
                 header_bits     <= adp_header_bit      & header_bits(header_bits'high downto 1);
-                frame_bits      <=  adp_frame_bit      & frame_bits(frame_bits'high   downto 1);
+                frame_bits      <= adp_frame_bit       & frame_bits(frame_bits'high   downto 1);
                 subpacket0_bits <= adp_subpacket0_bits & subpacket0_bits(subpacket0_bits'high downto 2);
                 updated         <= '1';  
             end if;

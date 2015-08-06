@@ -123,12 +123,14 @@ architecture Behavioral of hdmi_design is
         -- VGA data recovered from HDMI
         -------------------------------
         in_hdmi_detected : out std_logic;
-        in_blank      : out std_logic;
-        in_hsync      : out std_logic;
-        in_vsync      : out std_logic;
-        in_red        : out std_logic_vector(7 downto 0);
-        in_green      : out std_logic_vector(7 downto 0);
-        in_blue       : out std_logic_vector(7 downto 0);
+        in_blank        : out std_logic;
+        in_hsync        : out std_logic;
+        in_vsync        : out std_logic;
+        in_red          : out std_logic_vector(7 downto 0);
+        in_green        : out std_logic_vector(7 downto 0);
+        in_blue         : out std_logic_vector(7 downto 0);
+        is_interlaced   : out std_logic;
+        is_second_field : out std_logic;
             
         -------------------------------------
         -- Audio Levels
@@ -160,6 +162,8 @@ architecture Behavioral of hdmi_design is
             in_red    : in std_logic_vector(7 downto 0);
             in_green  : in std_logic_vector(7 downto 0);
             in_blue   : in std_logic_vector(7 downto 0);
+            is_interlaced   : in  std_logic;
+            is_second_field : in  std_logic;
         
             -------------------
             -- Processed pixels
@@ -187,6 +191,8 @@ architecture Behavioral of hdmi_design is
     signal in_red    : std_logic_vector(7 downto 0);
     signal in_green  : std_logic_vector(7 downto 0);
     signal in_blue   : std_logic_vector(7 downto 0);
+    signal is_interlaced   : std_logic;
+    signal is_second_field : std_logic;
     signal out_blank : std_logic;
     signal out_hsync : std_logic;
     signal out_vsync : std_logic;
@@ -274,7 +280,8 @@ i_processing: pixel_processing Port map (
         in_red   => in_red,
         in_green => in_green,
         in_blue  => in_blue,    
-
+        is_interlaced => is_interlaced,
+        is_second_field => is_second_field,
         audio_channel => audio_channel,
         audio_de      => audio_de,
         audio_sample  => audio_sample,

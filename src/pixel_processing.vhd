@@ -59,6 +59,8 @@ entity pixel_processing is
             in_red    : in std_logic_vector(7 downto 0);
             in_green  : in std_logic_vector(7 downto 0);
             in_blue   : in std_logic_vector(7 downto 0);
+            is_interlaced   : in std_logic;
+            is_second_field : in std_logic;
             -----------------------------------
             -- VGA data to be converted to HDMI
             -----------------------------------
@@ -104,6 +106,8 @@ architecture Behavioral of pixel_processing is
            in_red    : in std_logic_vector(7 downto 0);
            in_green  : in std_logic_vector(7 downto 0);
            in_blue   : in std_logic_vector(7 downto 0);
+           is_interlaced   : in std_logic;
+           is_second_field : in std_logic;
             
            -----------------------------------
            -- VGA data to be converted to HDMI
@@ -146,7 +150,9 @@ i_audio_meters: audio_meters Port map (
         in_red    => in_red,
         in_green  => in_green,
         in_blue   => in_blue,
-        
+        is_interlaced => is_interlaced,
+        is_second_field => is_second_field,
+       
         out_blank => out_blank,
         out_hsync => out_hsync,
         out_vsync => out_vsync,
