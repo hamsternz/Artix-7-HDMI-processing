@@ -21,6 +21,10 @@ Colourspaces / formats:
  - YCbCr 444
  - YCbCr 422
 
+New feature 6-AUG-2015!
+-----------------------
+Switch 0 will turn guidelines off and on. Will only show in 1080p 1080i and 720p resolutions.
+
 Supported Boards
 ----------------
  - Digilent Nexys Video 
@@ -50,7 +54,7 @@ Known issues:
 
  - There are timings errors, as generating 148.5MHz HDMI using the Artix-7 chip
    is actualy out of spec. Expect seven failing paths and about 20ns of negative 
-   slack
+   slack.
 
 ------------------------------------------------------------------------------------
 -- The MIT License (MIT)

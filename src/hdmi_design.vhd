@@ -57,7 +57,7 @@ entity hdmi_design is
         clk100    : in STD_LOGIC;
         -- Control signals
         led           : out   std_logic_vector(7 downto 0) :=(others => '0');
-        sw            : in    std_logic_vector(2 downto 0) :=(others => '0');
+        sw            : in    std_logic_vector(7 downto 0) :=(others => '0');
         debug_pmod    : out   std_logic_vector(7 downto 0) :=(others => '0');
 
         --HDMI input signals
@@ -153,6 +153,7 @@ architecture Behavioral of hdmi_design is
     
     component pixel_processing is
         Port ( clk : in STD_LOGIC;
+            switches  : in std_logic_vector(7 downto 0);
             ------------------
             -- Incoming pixels
             ------------------
@@ -271,6 +272,7 @@ i_hdmi_io: hdmi_io port map (
     
 i_processing: pixel_processing Port map ( 
         clk => pixel_clk,
+        switches => sw,
         ------------------
         -- Incoming pixels
         ------------------

@@ -75,8 +75,12 @@ entity pixel_processing is
             ------------------------------------
             audio_channel : in std_logic_vector(2 downto 0);
             audio_de      : in std_logic;
-            audio_sample  : in std_logic_vector(23 downto 0)
-        
+            audio_sample  : in std_logic_vector(23 downto 0);
+      
+            ----------------------------------
+            -- Controls
+            ----------------------------------   
+            switches : in std_logic_vector(7 downto 0)
     );
 end pixel_processing;
 
@@ -128,6 +132,40 @@ architecture Behavioral of pixel_processing is
     );
     end component;
 
+    component guidelines is
+    Port ( clk : in STD_LOGIC;
+           enable_feature   : in std_logic;
+           -------------------------------
+           -- VGA data recovered from HDMI
+           -------------------------------
+           in_blank  : in std_logic;
+           in_hsync  : in std_logic;
+           in_vsync  : in std_logic;
+           in_red    : in std_logic_vector(7 downto 0);
+           in_green  : in std_logic_vector(7 downto 0);
+           in_blue   : in std_logic_vector(7 downto 0);
+           is_interlaced   : in std_logic;
+           is_second_field : in std_logic;
+            
+           -----------------------------------
+           -- VGA data to be converted to HDMI
+           -----------------------------------
+           out_blank : out std_logic;
+           out_hsync : out std_logic;
+           out_vsync : out std_logic;
+           out_red   : out std_logic_vector(7 downto 0);
+           out_green : out std_logic_vector(7 downto 0);
+           out_blue  : out std_logic_vector(7 downto 0)
+    );
+    end component;
+    
+    signal mid_blank : std_logic;
+    signal mid_hsync : std_logic;
+    signal mid_vsync : std_logic;
+    signal mid_red   : std_logic_vector(7 downto 0);
+    signal mid_green : std_logic_vector(7 downto 0);
+    signal mid_blue  : std_logic_vector(7 downto 0);
+
 begin
 
 i_audio_to_db: audio_to_db port map (
@@ -153,16 +191,38 @@ i_audio_meters: audio_meters Port map (
         is_interlaced => is_interlaced,
         is_second_field => is_second_field,
        
+        out_blank => mid_blank,
+        out_hsync => mid_hsync,
+        out_vsync => mid_vsync,
+        out_red   => mid_red,
+        out_green => mid_green,
+        out_blue  => mid_blue,
+        
+        audio_channel => level_channel,
+        audio_de      => level_de,
+        audio_level   => level
+    );
+
+i_guidelines: guidelines Port map ( 
+        clk       => clk,
+        
+        enable_feature => switches(0),
+
+        in_blank  => mid_blank,
+        in_hsync  => mid_hsync,
+        in_vsync  => mid_vsync,
+        in_red    => mid_red,
+        in_green  => mid_green,
+        in_blue   => mid_blue,
+        is_interlaced => is_interlaced,
+        is_second_field => is_second_field,
+       
         out_blank => out_blank,
         out_hsync => out_hsync,
         out_vsync => out_vsync,
         out_red   => out_red,
         out_green => out_green,
-        out_blue  => out_blue,
-        
-        audio_channel => level_channel,
-        audio_de      => level_de,
-        audio_level   => level
+        out_blue  => out_blue
     );
 
  end Behavioral;
