@@ -67,3 +67,6 @@ set_property -dict { PACKAGE_PIN V15   IOSTANDARD LVCMOS25 } [get_ports { led[4]
 set_property -dict { PACKAGE_PIN W16   IOSTANDARD LVCMOS25 } [get_ports { led[5] }]; #IO_L16N_T2_13 Sch=led[5]
 set_property -dict { PACKAGE_PIN W15   IOSTANDARD LVCMOS25 } [get_ports { led[6] }]; #IO_L16P_T2_13 Sch=led[6]
 set_property -dict { PACKAGE_PIN Y13   IOSTANDARD LVCMOS25 } [get_ports { led[7] }]; #IO_L5P_T0_13 Sch=led[7]
+
+##UART
+set_property -dict { PACKAGE_PIN AA19  IOSTANDARD LVCMOS33 } [get_ports { rs232_tx }]; #IO_L15P_T2_DQS_RDWR_B_14 Sch=uart_rx_out

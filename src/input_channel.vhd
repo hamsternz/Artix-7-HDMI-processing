@@ -57,6 +57,7 @@ entity input_channel is
            reset           : in  std_logic;
            ce              : in  STD_LOGIC;
            invalid_symbol  : out std_logic;
+           symbol          : out std_logic_vector (9 downto 0);
            ctl_valid       : out std_logic;
            ctl             : out std_logic_vector (1 downto 0);
            terc4_valid     : out std_logic;
@@ -110,10 +111,11 @@ architecture Behavioral of input_channel is
     signal delay_ce        : STD_LOGIC;
     signal bitslip         : STD_LOGIC;
     signal symbol_sync_i   : STD_LOGIC;
-    signal symbol          : std_logic_vector (9 downto 0);
+    signal symbol_i        : std_logic_vector (9 downto 0);
     signal invalid_symbol_i: STD_LOGIC;
 
 begin
+    symbol <= symbol_i;
 
 i_deser: deserialiser_1_to_10 port map (
         clk_mgmt    => clk_mgmt,
@@ -126,11 +128,11 @@ i_deser: deserialiser_1_to_10 port map (
         clk_x5      => clk_x5,
         reset       => reset,
         serial      => serial,
-        data        => symbol);
+        data        => symbol_i);
 
 i_decoder: tmds_decoder port map (
         clk             => clk,
-        symbol          => symbol,
+        symbol          => symbol_i,
         invalid_symbol  => invalid_symbol_i,
         ctl_valid       => ctl_valid,
         ctl             => ctl,

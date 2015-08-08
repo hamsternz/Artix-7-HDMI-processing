@@ -79,7 +79,9 @@ entity hdmi_design is
         hdmi_tx_rscl  : inout std_logic;
         hdmi_tx_rsda  : inout std_logic;
         hdmi_tx_p     : out   std_logic_vector(2 downto 0);
-        hdmi_tx_n     : out   std_logic_vector(2 downto 0)
+        hdmi_tx_n     : out   std_logic_vector(2 downto 0);
+        -- For dumping symbols
+        rs232_tx     : out std_logic      
     );
 end hdmi_design;
 
@@ -147,9 +149,20 @@ architecture Behavioral of hdmi_design is
         out_vsync     : in  std_logic;
         out_red       : in  std_logic_vector(7 downto 0);
         out_green     : in  std_logic_vector(7 downto 0);
-        out_blue      : in  std_logic_vector(7 downto 0)
+        out_blue      : in  std_logic_vector(7 downto 0);
+        -----------------------------------
+        -- For symbol dump or retransmit
+        -----------------------------------
+        symbol_sync  : out std_logic; -- indicates a fixed reference point in the frame.
+        symbol_ch0   : out std_logic_vector(9 downto 0);
+        symbol_ch1   : out std_logic_vector(9 downto 0);
+        symbol_ch2   : out std_logic_vector(9 downto 0)
     );
     end component;
+    signal symbol_sync  : std_logic;
+    signal symbol_ch0   : std_logic_vector(9 downto 0);
+    signal symbol_ch1   : std_logic_vector(9 downto 0);
+    signal symbol_ch2   : std_logic_vector(9 downto 0);
     
     component pixel_processing is
         Port ( clk : in STD_LOGIC;
@@ -183,6 +196,17 @@ architecture Behavioral of hdmi_design is
             audio_de      : in std_logic;
             audio_sample  : in std_logic_vector(23 downto 0)
     );
+    end component;
+
+    component symbol_dump is
+        port ( 
+            clk          : in std_logic;
+            clk100       : in std_logic;
+            symbol_sync  : in std_logic; -- indicates a fixed reference point in the frame.
+            symbol_ch0   : in std_logic_vector(9 downto 0);
+            symbol_ch1   : in std_logic_vector(9 downto 0);
+            symbol_ch2   : in std_logic_vector(9 downto 0);
+            rs232_tx     : out std_logic);        
     end component;
 
     signal pixel_clk : std_logic;
@@ -255,6 +279,9 @@ i_hdmi_io: hdmi_io port map (
         in_green => in_green,
         in_blue  => in_blue,
 
+        -----------------------------------
+        -- For symbol dump or retransmit
+        -----------------------------------
         audio_channel => audio_channel,
         audio_de      => audio_de,
         audio_sample  => audio_sample,
@@ -267,7 +294,12 @@ i_hdmi_io: hdmi_io port map (
         out_vsync => out_vsync,
         out_red   => out_red,
         out_green => out_green,
-        out_blue  => out_blue
+        out_blue  => out_blue,
+        
+        symbol_sync  => symbol_sync, 
+        symbol_ch0   => symbol_ch0,
+        symbol_ch1   => symbol_ch1,
+        symbol_ch2   => symbol_ch2
     );
     
 i_processing: pixel_processing Port map ( 
@@ -297,5 +329,14 @@ i_processing: pixel_processing Port map (
         out_green => out_green,
         out_blue  => out_blue
     );
+
+i_symbol_dump: symbol_dump port map (
+            clk         => pixel_clk,
+            clk100      => clk100,
+            symbol_sync => symbol_sync,
+            symbol_ch0  => symbol_ch0,
+            symbol_ch1  => symbol_ch1,
+            symbol_ch2  => symbol_ch2, 
+            rs232_tx    => rs232_tx);        
 
 end Behavioral;

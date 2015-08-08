@@ -40,7 +40,8 @@
 --  Research use    - Enough to take the family out to dinner
 --  Commercial use  - A weeks pay for an engineer (I wish!)
 --
-----------------------------------------------------------------------------------library IEEE;
+----------------------------------------------------------------------------------
+library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity hdmi_output_test is

@@ -86,7 +86,12 @@ entity hdmi_input is
         adp_subpacket0_bits : out std_logic_vector(1 downto 0);
         adp_subpacket1_bits : out std_logic_vector(1 downto 0);
         adp_subpacket2_bits : out std_logic_vector(1 downto 0);
-        adp_subpacket3_bits : out std_logic_vector(1 downto 0)
+        adp_subpacket3_bits : out std_logic_vector(1 downto 0);
+        -- For later reuse
+        symbol_ch0   : out std_logic_vector(9 downto 0);
+        symbol_ch1   : out std_logic_vector(9 downto 0);
+        symbol_ch2   : out std_logic_vector(9 downto 0)
+        
     );
 end hdmi_input;
 
@@ -101,6 +106,7 @@ architecture Behavioral of hdmi_input is
            reset           : in  STD_LOGIC;
            ce              : in  STD_LOGIC;
            invalid_symbol  : out std_logic;
+           symbol          : out std_logic_vector (9 downto 0);
            ctl_valid       : out std_logic;
            ctl             : out std_logic_vector (1 downto 0);
            terc4_valid     : out std_logic;
@@ -113,32 +119,6 @@ architecture Behavioral of hdmi_input is
     end component;
     
     signal clk_pixel_raw     : std_logic;
-    component deserialiser_1_to_10 is
-    Port ( clk_mgmt    : in  std_logic;
-           delay_ce    : in std_logic;
-           delay_count : in std_logic_vector (4 downto 0);
-           clk         : in std_logic;
-           clk_x1      : in std_logic;
-           bitslip     : in std_logic;
-           clk_x5      : in std_logic;
-           reset       : in std_logic;
-           serial      : in std_logic;
-           data        : out std_logic_vector (9 downto 0));
-    end component;
-    
-    component TMDS_decoder is
-    Port ( clk             : in  std_logic;
-           symbol          : in  std_logic_vector (9 downto 0);
-           invalid_symbol  : out std_logic;
-           ctl_valid       : out std_logic;
-           ctl             : out std_logic_vector (1 downto 0);
-           terc4_valid     : out std_logic;
-           terc4           : out std_logic_vector (3 downto 0);
-           guardband_valid : out std_logic;
-           guardband       : out std_logic_vector (0 downto 0);
-           data_valid      : out std_logic;
-           data            : out std_logic_vector (7 downto 0));
-    end component;
     
     component alingment_detect is
         Port ( clk            : in STD_LOGIC;
@@ -259,6 +239,10 @@ begin
     pll_locked  <= locked;
     symbol_sync <= symbol_sync_i;
     reset       <= std_logic(reset_counter(reset_counter'high));    
+    symbol_ch0  <= ch0_symbol;
+    symbol_ch1  <= ch1_symbol;
+    symbol_ch2  <= ch2_symbol;
+
     
     debug       <= ch2_invalid_symbol & ch1_invalid_symbol & ch0_invalid_symbol & dvid_mode & locked & symbol_sync_i;         
 
@@ -443,6 +427,7 @@ ch0: input_channel Port map (
         clk_x5          => clk_pixel_x5,
         serial          => hdmi_in_ch0,
         invalid_symbol  => ch0_invalid_symbol,
+        symbol          => ch0_symbol,
         ctl_valid       => ch0_ctl_valid,
         ctl             => ch0_ctl,
         terc4_valid     => ch0_terc4_valid,
@@ -461,6 +446,7 @@ ch1: input_channel Port map (
         clk_x1          => clk_pixel_x1,
         clk_x5          => clk_pixel_x5,
         serial          => hdmi_in_ch1,
+        symbol          => ch1_symbol,
         invalid_symbol  => ch1_invalid_symbol,
         ctl_valid       => ch1_ctl_valid,
         ctl             => ch1_ctl,
@@ -481,6 +467,7 @@ ch2: input_channel Port map (
         clk_x5          => clk_pixel_x5,
         serial          => hdmi_in_ch2,
         invalid_symbol  => ch2_invalid_symbol,
+        symbol          => ch2_symbol,
         ctl_valid       => ch2_ctl_valid,
         ctl             => ch2_ctl,
         terc4_valid     => ch2_terc4_valid,
@@ -597,7 +584,7 @@ hdmi_section_decode: process(clk_pixel)
             -- encoded in TERC4 coded in Ch0 - annoying!
             ---------------------------------------------
             adp_guardband_detect <= '0';
-            if ch0_terc4_valid = '1' and ch1_guardband_valid = '1' and ch1_guardband_valid = '1' then
+            if in_vdp = '0' and ch0_terc4_valid = '1' and ch1_guardband_valid = '1' and ch1_guardband_valid = '1' then
                 if ch0_terc4(3 downto 2) = "11" and ch1_guardband = "0" and ch2_guardband = "0" then
                     raw_vsync <= ch0_terc4(1);
                     raw_hsync <= ch0_terc4(0);

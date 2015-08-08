@@ -55,7 +55,7 @@ architecture Behavioral of tb_hdmi_decode is
         clk100    : in STD_LOGIC;
         -- Control signals
         led           : out   std_logic_vector(7 downto 0);
-        sw            : in    std_logic_vector(2 downto 0) :=(others => '0');
+        sw            : in    std_logic_vector(7 downto 0) :=(others => '0');
         debug_pmod    : out   std_logic_vector(7 downto 0) :=(others => '0');
 
         --HDMI input signals
@@ -77,7 +77,9 @@ architecture Behavioral of tb_hdmi_decode is
         hdmi_tx_rscl  : inout std_logic;
         hdmi_tx_rsda  : inout std_logic;
         hdmi_tx_p     : out   std_logic_vector(2 downto 0);
-        hdmi_tx_n     : out   std_logic_vector(2 downto 0)
+        hdmi_tx_n     : out   std_logic_vector(2 downto 0);
+        -- For dumping symbols
+        rs232_tx     : out std_logic      
     );
     end component;
     
@@ -117,6 +119,7 @@ architecture Behavioral of tb_hdmi_decode is
     signal hdmi_tx_n     : std_logic_vector(2 downto 0);
     
     signal sdat_drive : std_logic := '1';
+    signal rs232_tx : std_logic := '1';
 begin
 hdmi_rx_sda <= '0' when sdat_drive = '0' else 'H';
 
@@ -173,7 +176,9 @@ uut: hdmi_design Port map (
     hdmi_tx_rscl  => hdmi_tx_rscl,
     hdmi_tx_rsda  => hdmi_tx_rsda,
     hdmi_tx_p     => hdmi_tx_p,
-    hdmi_tx_n     => hdmi_tx_n
+    hdmi_tx_n     => hdmi_tx_n,
+    
+    rs232_tx      => rs232_tx
 );
 
 edid_test_proc: process
