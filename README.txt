@@ -44,16 +44,10 @@ Known issues:
  - Does not adjust PLL settings for input clock, so the PLL is run slightly out
    of spec.
 
- - Image may re-sync after a few seconds if it receives errors.
-
- - The audio meters are drawn twice as tall in interlaced modes
-
- - A false VSYNC pulse is causing the meters to be displayed more than once when
-   some content is shown. Very weird, but I want to leave this in for now so I can
-   find the root cause.
+ - Image may re-sync once after a few seconds if symbol errors are seen.
 
  - There are timings errors, as generating 148.5MHz HDMI using the Artix-7 chip
-   is actualy out of spec. Expect seven failing paths and about 20ns of negative 
+   is actually out of spec. Expect seven failing paths and about 20ns of negative 
    slack.
 
 ------------------------------------------------------------------------------------

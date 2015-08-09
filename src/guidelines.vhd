@@ -91,7 +91,7 @@ process(clk)
             out_red    <= in_red;
             out_green  <= in_green;
             out_blue   <= in_blue;
-            
+
             if enable_feature = '1' then
                 if h_size = 1280 then
                     if hcount = 426 or hcount = 854 then
@@ -132,19 +132,26 @@ process(clk)
                 end if;
             end if;
                             
+            -------------------------------------------------------------
             -- Count the number of lines in a frame (not field!!!)
+            -------------------------------------------------------------
             if last_blank = '0' and in_blank = '1' then
                 vcount <= vcount + 1;
             end if;
+            
+            -------------------------------------------------------------
             -- Use the falling edge of VSYNC to to capture the number of 
             -- lines on the screen, as the rising edge is where the 
             -- interaced field is detected and can be a bit unstable.
+            -------------------------------------------------------------
             if in_vsync = '0' and last_vsync = '1' and is_second_field = '0'then
                 vcount <= (others => '0');
                 v_size <= vcount;
             end if;
 
+            -------------------------------------------------------------
             -- Count the width of the frame
+            -------------------------------------------------------------
             if in_blank = '1' then
                 if hcount /= 0 then
                     h_size <= hcount;

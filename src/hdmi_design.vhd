@@ -272,12 +272,14 @@ i_hdmi_io: hdmi_io port map (
         -------------------------------
         -- VGA data recovered from HDMI
         -------------------------------
-        in_blank => in_blank,
-        in_hsync => in_hsync,
-        in_vsync => in_vsync,
-        in_red   => in_red,
-        in_green => in_green,
-        in_blue  => in_blue,
+        in_blank        => in_blank,
+        in_hsync        => in_hsync,
+        in_vsync        => in_vsync,
+        in_red          => in_red,
+        in_green        => in_green,
+        in_blue         => in_blue,
+        is_interlaced   => is_interlaced,
+        is_second_field => is_second_field,
 
         -----------------------------------
         -- For symbol dump or retransmit
@@ -308,17 +310,17 @@ i_processing: pixel_processing Port map (
         ------------------
         -- Incoming pixels
         ------------------
-        in_blank => in_blank,
-        in_hsync => in_hsync,
-        in_vsync => in_vsync,
-        in_red   => in_red,
-        in_green => in_green,
-        in_blue  => in_blue,    
-        is_interlaced => is_interlaced,
+        in_blank        => in_blank,
+        in_hsync        => in_hsync,
+        in_vsync        => in_vsync,
+        in_red          => in_red,
+        in_green        => in_green,
+        in_blue         => in_blue,    
+        is_interlaced   => is_interlaced,
         is_second_field => is_second_field,
-        audio_channel => audio_channel,
-        audio_de      => audio_de,
-        audio_sample  => audio_sample,
+        audio_channel   => audio_channel,
+        audio_de        => audio_de,
+        audio_sample    => audio_sample,
         -------------------
         -- Processed pixels
         -------------------
@@ -330,13 +332,16 @@ i_processing: pixel_processing Port map (
         out_blue  => out_blue
     );
 
-i_symbol_dump: symbol_dump port map (
-            clk         => pixel_clk,
-            clk100      => clk100,
-            symbol_sync => symbol_sync,
-            symbol_ch0  => symbol_ch0,
-            symbol_ch1  => symbol_ch1,
-            symbol_ch2  => symbol_ch2, 
-            rs232_tx    => rs232_tx);        
-
+    -- Swap to this if you want to capture the HDMI symbols
+    -- and send them up the RS232 port
+    rs232_tx <= '1';
+--i_symbol_dump: symbol_dump port map (
+--            clk         => pixel_clk,
+--            clk100      => clk100,
+--            symbol_sync => symbol_sync,
+--            symbol_ch0  => symbol_ch0,
+--            symbol_ch1  => symbol_ch1,
+--            symbol_ch2  => symbol_ch2, 
+--            rs232_tx    => rs232_tx);        
+    
 end Behavioral;

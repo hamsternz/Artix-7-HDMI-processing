@@ -149,7 +149,7 @@ level_proc: process(clk)
                 end if;
             end if;
 
-            -- Drop the levels once each frame
+            -- Signal to reduce (drop' the levels of the meters once each frame (of field for interlaced sources
             if last_vsync = '0'  and in_vsync = '1' then
                 pending_drop <= '1';
                 drop_index <= (others => '1');
@@ -242,13 +242,21 @@ video_proc: process(clk)
 
             -- The end of active video is used to increment the line count           
             if last_blank = '0' and in_blank = '1' then
-                line_count <= line_count + 1;
+                if is_interlaced = '1' then
+                    line_count <= line_count + 2;
+                else
+                    line_count <= line_count + 1;
+                end if;
                 col_count <= (others => '0');
             end if; 
                         
             -- Reset the line count on falling vsync
-            if last_vsync = '0'  and in_vsync = '1' then
-                line_count <= (others => '0');
+            if last_vsync = '1'  and in_vsync = '0' then
+                if is_interlaced = '1' and is_second_field = '1' then
+                    line_count <= (0 => '1', others => '0');
+                else
+                    line_count <= (others => '0');
+                end if;
             end if;
             -- remember the hsync and vsync values
             last_vsync <= in_vsync;
