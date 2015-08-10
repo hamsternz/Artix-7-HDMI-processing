@@ -21,9 +21,13 @@ Colourspaces / formats:
  - YCbCr 444
  - YCbCr 422
 
+New feature 10-AUG-2015!
+-----------------------
+Switch 0 will turn real-time edge detect off and on.
+
 New feature 6-AUG-2015!
 -----------------------
-Switch 0 will turn guidelines off and on. Will only show in 1080p 1080i and 720p resolutions.
+Switch 1 will turn guidelines off and on. Will only show in 1080p 1080i and 720p resolutions.
 
 Supported Boards
 ----------------

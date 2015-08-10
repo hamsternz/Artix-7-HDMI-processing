@@ -132,6 +132,31 @@ architecture Behavioral of pixel_processing is
     );
     end component;
 
+    component edge_enhance is
+    Port ( clk : in STD_LOGIC;
+           enable_feature   : in std_logic;
+           -------------------------------
+           -- VGA data recovered from HDMI
+           -------------------------------
+           in_blank  : in std_logic;
+           in_hsync  : in std_logic;
+           in_vsync  : in std_logic;
+           in_red    : in std_logic_vector(7 downto 0);
+           in_green  : in std_logic_vector(7 downto 0);
+           in_blue   : in std_logic_vector(7 downto 0);
+            
+           -----------------------------------
+           -- VGA data to be converted to HDMI
+           -----------------------------------
+           out_blank : out std_logic;
+           out_hsync : out std_logic;
+           out_vsync : out std_logic;
+           out_red   : out std_logic_vector(7 downto 0);
+           out_green : out std_logic_vector(7 downto 0);
+           out_blue  : out std_logic_vector(7 downto 0)
+    );
+    end component;
+
     component guidelines is
     Port ( clk : in STD_LOGIC;
            enable_feature   : in std_logic;
@@ -159,12 +184,19 @@ architecture Behavioral of pixel_processing is
     );
     end component;
     
-    signal mid_blank : std_logic;
-    signal mid_hsync : std_logic;
-    signal mid_vsync : std_logic;
-    signal mid_red   : std_logic_vector(7 downto 0);
-    signal mid_green : std_logic_vector(7 downto 0);
-    signal mid_blue  : std_logic_vector(7 downto 0);
+    signal b_blank : std_logic;
+    signal b_hsync : std_logic;
+    signal b_vsync : std_logic;
+    signal b_red   : std_logic_vector(7 downto 0);
+    signal b_green : std_logic_vector(7 downto 0);
+    signal b_blue  : std_logic_vector(7 downto 0);
+
+    signal c_blank : std_logic;
+    signal c_hsync : std_logic;
+    signal c_vsync : std_logic;
+    signal c_red   : std_logic_vector(7 downto 0);
+    signal c_green : std_logic_vector(7 downto 0);
+    signal c_blue  : std_logic_vector(7 downto 0);
 
 begin
 
@@ -180,40 +212,61 @@ i_audio_to_db: audio_to_db port map (
         out_level      => level
     );
 
-i_audio_meters: audio_meters Port map ( 
+i_edge_enhance: edge_enhance Port map ( 
         clk       => clk,
+        
+        enable_feature => switches(0),
+
         in_blank  => in_blank,
         in_hsync  => in_hsync,
         in_vsync  => in_vsync,
         in_red    => in_red,
         in_green  => in_green,
         in_blue   => in_blue,
+       
+        out_blank => b_blank,
+        out_hsync => b_hsync,
+        out_vsync => b_vsync,
+        out_red   => b_red,
+        out_green => b_green,
+        out_blue  => b_blue
+    );
+
+i_audio_meters: audio_meters Port map ( 
+        clk       => clk,
+        in_blank  => b_blank,
+        in_hsync  => b_hsync,
+        in_vsync  => b_vsync,
+        in_red    => b_red,
+        in_green  => b_green,
+        in_blue   => b_blue,
         is_interlaced => is_interlaced,
         is_second_field => is_second_field,
        
-        out_blank => mid_blank,
-        out_hsync => mid_hsync,
-        out_vsync => mid_vsync,
-        out_red   => mid_red,
-        out_green => mid_green,
-        out_blue  => mid_blue,
+        out_blank => c_blank,
+        out_hsync => c_hsync,
+        out_vsync => c_vsync,
+        out_red   => c_red,
+        out_green => c_green,
+        out_blue  => c_blue,
         
         audio_channel => level_channel,
         audio_de      => level_de,
         audio_level   => level
     );
 
+
 i_guidelines: guidelines Port map ( 
         clk       => clk,
         
-        enable_feature => switches(0),
+        enable_feature => switches(1),
 
-        in_blank  => mid_blank,
-        in_hsync  => mid_hsync,
-        in_vsync  => mid_vsync,
-        in_red    => mid_red,
-        in_green  => mid_green,
-        in_blue   => mid_blue,
+        in_blank  => c_blank,
+        in_hsync  => c_hsync,
+        in_vsync  => c_vsync,
+        in_red    => c_red,
+        in_green  => c_green,
+        in_blue   => c_blue,
         is_interlaced => is_interlaced,
         is_second_field => is_second_field,
        
