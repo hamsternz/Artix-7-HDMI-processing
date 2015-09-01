@@ -206,25 +206,24 @@ process(clk)
                 out_hsync <= sobel_3_hsync;
                 out_blank <= sobel_3_blank;
                 out_vsync <= sobel_3_vsync;
-                
-                if sobel_3_red(12 downto 11) = "00" then
-                    out_red   <= std_logic_vector(sobel_3_red(10 downto 3));
+
+                if sobel_3_red(12 downto 12) = "0" then
+                    out_red   <= std_logic_vector(sobel_3_red(11 downto 4));
                 else
                     out_red   <= (others => '1');
                 end if;
 
-                if sobel_3_green(12 downto 11) = "00" then
-                    out_green   <= std_logic_vector(sobel_3_green(10 downto 3));
+                if sobel_3_green(12 downto 12) = "0" then
+                    out_green   <= std_logic_vector(sobel_3_green(11 downto 4));
                 else
                     out_green   <= (others => '1');
                 end if;
 
-                if sobel_3_blue(12 downto 11) = "00" then
-                    out_blue   <= std_logic_vector(sobel_3_blue(10 downto 3));
+                if sobel_3_blue(12 downto 12) = "0" then
+                    out_blue   <= std_logic_vector(sobel_3_blue(11 downto 4));
                 else
                     out_blue   <= (others => '1');
                 end if;
-                
             else
                 out_hsync <= bypass_3_hsync;
                 out_blank <= bypass_3_blank;

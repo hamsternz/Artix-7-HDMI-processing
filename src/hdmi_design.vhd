@@ -334,14 +334,14 @@ i_processing: pixel_processing Port map (
 
     -- Swap to this if you want to capture the HDMI symbols
     -- and send them up the RS232 port
-    rs232_tx <= '1';
---i_symbol_dump: symbol_dump port map (
---            clk         => pixel_clk,
---            clk100      => clk100,
---            symbol_sync => symbol_sync,
---            symbol_ch0  => symbol_ch0,
---            symbol_ch1  => symbol_ch1,
---            symbol_ch2  => symbol_ch2, 
---            rs232_tx    => rs232_tx);        
+    --rs232_tx <= '1';
+i_symbol_dump: symbol_dump port map (
+            clk         => pixel_clk,
+            clk100      => clk100,
+            symbol_sync => symbol_sync,
+            symbol_ch0  => symbol_ch0,
+            symbol_ch1  => symbol_ch1,
+            symbol_ch2  => symbol_ch2, 
+            rs232_tx    => rs232_tx);        
     
 end Behavioral;
