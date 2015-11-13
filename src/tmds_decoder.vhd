@@ -126,11 +126,12 @@ decode_ctl:  process(clk)
                     when x"93"  => terc4_valid <= '1'; terc4 <= "0100"; -- "0101110001" TERC4 0100
                     when x"22"  => terc4_valid <= '1'; terc4 <= "0101"; -- "0100011110" TERC4 0101
                     when x"92"  => terc4_valid <= '1'; terc4 <= "0110"; -- "0110001110" TERC4 0110
-                    when x"44"  => terc4_valid <= '1'; terc4 <= "0110"; -- "0100111100" TERC4 0111
+                    when x"44"  => terc4_valid <= '1'; terc4 <= "0111"; -- "0100111100" TERC4 0111
                     when x"AB"  => terc4_valid <= '1'; terc4 <= "1000"; -- "1011001100" TERC4 1000 & HDMI Guard band (video C0 and Video C2) 
                     when x"4B"  => terc4_valid <= '1'; terc4 <= "1001"; -- "0100111001" TERC4 1001
                     when x"A4"  => terc4_valid <= '1'; terc4 <= "1010"; -- "0110011100" TERC4 1010
-                    when x"D5"  => terc4_valid <= '1'; terc4 <= "1011"; -- "1011000110" TERC4 1011
+                    when x"B5"  => terc4_valid <= '1'; terc4 <= "1011"; -- "1011000110" TERC4 1011
+                    when x"B5"  => terc4_valid <= '1'; terc4 <= "1011"; -- "1011000110" TERC4 1011
                     when x"6D"  => terc4_valid <= '1'; terc4 <= "1100"; -- "1010001110" TERC4 1100
                     when x"6C"  => terc4_valid <= '1'; terc4 <= "1101"; -- "1001110001" TERC4 1101
                     when x"A5"  => terc4_valid <= '1'; terc4 <= "1110"; -- "0101100011" TERC4 1110
