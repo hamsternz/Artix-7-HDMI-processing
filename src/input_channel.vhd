@@ -98,7 +98,7 @@ architecture Behavioral of input_channel is
            data            : out std_logic_vector (7 downto 0));
     end component;
     
-    component alingment_detect is
+    component alignment_detect is
         Port ( clk            : in STD_LOGIC;
                invalid_symbol : in STD_LOGIC;
                delay_count    : out STD_LOGIC_VECTOR(4 downto 0);
@@ -146,7 +146,7 @@ i_decoder: tmds_decoder port map (
     
     invalid_symbol <= invalid_symbol_i;
      
-i_alignment_detect: alingment_detect port map (
+i_alignment_detect: alignment_detect port map (
            clk            => clk,
            invalid_symbol => invalid_symbol_i,
            delay_count    => delay_count,

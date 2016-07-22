@@ -120,7 +120,7 @@ architecture Behavioral of hdmi_input is
     
     signal clk_pixel_raw     : std_logic;
     
-    component alingment_detect is
+    component alignment_detect is
         Port ( clk            : in STD_LOGIC;
                invalid_symbol : in STD_LOGIC;
                delay_count    : out STD_LOGIC_VECTOR(4 downto 0);

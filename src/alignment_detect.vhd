@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------------
 -- Engineer: Mike Field <hamster@snap.net.nz< 
 -- 
--- Module Name: alingment_detect - Behavioral
+-- Module Name: alignment_detect - Behavioral
 --
 -- Description: Manage the dealy and bitslipping of the SERDES based on invald 
 --              symbols being received.  
@@ -49,16 +49,16 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity alingment_detect is
+entity alignment_detect is
     Port ( clk            : in  STD_LOGIC;
            invalid_symbol : in  STD_LOGIC;
            delay_count    : out std_logic_vector(4 downto 0);
            delay_ce       : out STD_LOGIC;
            bitslip        : out STD_LOGIC;
            symbol_sync    : out STD_LOGIC);
-end alingment_detect;
+end alignment_detect;
 
-architecture Behavioral of alingment_detect is
+architecture Behavioral of alignment_detect is
     --------------------------------------
     -- Signals for controlling the bitslip 
     -- and delay so we can sync symbols
