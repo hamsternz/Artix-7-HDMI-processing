@@ -131,7 +131,6 @@ decode_ctl:  process(clk)
                     when x"4B"  => terc4_valid <= '1'; terc4 <= "1001"; -- "0100111001" TERC4 1001
                     when x"A4"  => terc4_valid <= '1'; terc4 <= "1010"; -- "0110011100" TERC4 1010
                     when x"B5"  => terc4_valid <= '1'; terc4 <= "1011"; -- "1011000110" TERC4 1011
-                    when x"B5"  => terc4_valid <= '1'; terc4 <= "1011"; -- "1011000110" TERC4 1011
                     when x"6D"  => terc4_valid <= '1'; terc4 <= "1100"; -- "1010001110" TERC4 1100
                     when x"6C"  => terc4_valid <= '1'; terc4 <= "1101"; -- "1001110001" TERC4 1101
                     when x"A5"  => terc4_valid <= '1'; terc4 <= "1110"; -- "0101100011" TERC4 1110
